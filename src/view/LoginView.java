@@ -25,7 +25,7 @@ public class LoginView extends JPanel {
 	 */
 	public LoginView(StateModel state, UserModel user) {
 		
-		loginController = new LoginController(user, this);
+		loginController = new LoginController(state, user);
 		
 		txtUsername = new JTextField();
 		txtUsername.setBounds(28, 6, 130, 26);
@@ -54,7 +54,6 @@ public class LoginView extends JPanel {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				state.setApplicationState(ApplicationState.Home);
-
 			}
 		});
 		btnNewButton_1.setBounds(187, 206, 86, 29);

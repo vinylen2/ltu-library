@@ -8,9 +8,9 @@ public class StateModel extends Observable {
 		Home,
 		Login,
 		SearchObject,
-		AdminHome,
+		Admin,
+		Borrower,
 	}
-	
 	
 	public ApplicationState getCurrentState() {
 		return currentState;
@@ -22,7 +22,4 @@ public class StateModel extends Observable {
 		// notifies DynamicView about change in state
 		notifyObservers();
 	}
-	
-	
-
 }

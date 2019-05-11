@@ -1,14 +1,16 @@
 package controller;
 
+import Common.User;
 import model.UserModel;
 
 public class UserController {
-	private UserModel model;
-	private UserView view;
-	public UserController(UserModel m, UserView v) {
-		model = m;
-		view = v;
-		
+	private UserModel user;
+	public UserController(UserModel user) {
+		this.user = user;
+	}
+	
+	public void updateUser(User newUser) {
+		user.setUser(newUser);
 	}
 
 }
