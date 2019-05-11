@@ -27,10 +27,7 @@ public class DatabaseConnector {
 		  connect = DriverManager.getConnection("jdbc:mysql://localhost/library?user=" + dbUsername + "&password=" + dbPassword + "&serverTimezone=UTC");
 
 		  Statement statement = connect.createStatement();
-		  ResultSet resultSet = statement.executeQuery("SELECT * FROM User");
+		  //ResultSet resultSet = statement.executeQuery("SELECT * FROM User");
 		  
-		  java.sql.ResultSetMetaData metaData = resultSet.getMetaData();
-		  System.out.print(metaData.getColumnCount());
-	  
 		}
 }

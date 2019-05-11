@@ -22,6 +22,7 @@ public class DynamicView extends JPanel implements Observer {
 	// runs when controllers notifies StateModel about changes in state
 	@Override
 	public void update(Observable o, Object arg) {
+		System.out.println(o);
 		// TODO Auto-generated method stub
 		// update gui here
 		this.removeAll();
