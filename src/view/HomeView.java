@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.JPanel;
 
+import library.DatabaseConnector;
 import model.StateModel;
 import model.StateModel.ApplicationState;
 
@@ -39,5 +40,13 @@ public class HomeView extends JPanel {
 		});
 		btnNewButton_1.setBounds(163, 58, 117, 29);
 		add(btnNewButton_1);
+		
+		DatabaseConnector db = new DatabaseConnector();
+		try {
+			db.connect();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 	}
 }

@@ -7,13 +7,12 @@ public class StateModel extends Observable {
 	public enum ApplicationState {
 		Home,
 		Login,
-    SearchObject,
-    AdminHome,
+		SearchObject,
+		AdminHome,
 	}
 	
 	
 	public ApplicationState getCurrentState() {
-		System.out.println(currentState);
 		return currentState;
 	}
 	

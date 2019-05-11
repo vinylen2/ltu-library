@@ -24,7 +24,6 @@ public class DynamicView extends JPanel implements Observer {
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 		// update gui here
-		System.out.println("State changed to" + o);
 		this.removeAll();
 		this.add(states.get(((StateModel)o).getCurrentState()));
 		this.revalidate();
