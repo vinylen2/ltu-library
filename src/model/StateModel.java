@@ -7,7 +7,8 @@ public class StateModel extends Observable {
 	public enum ApplicationState {
 		Home,
 		Login,
-		SearchObject,
+    SearchObject,
+    AdminHome,
 	}
 	
 	
