@@ -18,6 +18,7 @@ public class DatabaseConnector {
 	  private Connection connect = null;
 	  
 	  public void connect() throws SQLException, IOException {
+		  System.out.println("running dbconnector");
 		  Properties prop = new Properties();
 		  FileInputStream ip = new FileInputStream("src/library/db.properties");
 		  prop.load(ip);
