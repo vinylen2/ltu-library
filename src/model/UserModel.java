@@ -1,6 +1,6 @@
 package model;
 
-public class User {
+public class UserModel {
 	private static boolean isLoggedIn = false;
 	private static String role = "";
 	

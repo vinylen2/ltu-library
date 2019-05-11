@@ -1,14 +1,14 @@
 package controller;
 
-import model.User;
+import model.UserModel;
 
 public class UserController {
-	public void logOut(User user) {
-		user.logOut();
-	}
-
-	public void logIn(User user) {
-		user.logIn();
+	private UserModel model;
+	private UserView view;
+	public UserController(UserModel m, UserView v) {
+		model = m;
+		view = v;
+		
 	}
 
 }
