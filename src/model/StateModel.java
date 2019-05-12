@@ -11,7 +11,9 @@ public class StateModel extends Observable {
 		Admin,
 		User,
 		AddBorrower,
-		AddObject,
+		AddObject, 
+		AddLoan,
+		
 	}
 	
 	public ApplicationState getCurrentState() {
