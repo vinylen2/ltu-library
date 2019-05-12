@@ -32,7 +32,7 @@ public class UserQuery {
 		User user = new User();
 
 		try (PreparedStatement selectAllUsers = connection.prepareStatement(
-				"SELECT * FROM User WHERE email = ? AND password = ?")){
+				"SELECT * FROM User u INNER JOIN Role r ON r.roleId =  u.roleId WHERE u.email = ? AND u.password = ?;")){
 			selectAllUsers.setString(1, username);
 			selectAllUsers.setString(2, password);
 
@@ -42,7 +42,7 @@ public class UserQuery {
 				user = new User(
 					true,
 					rs.getInt("userId"),
-					"Admin",
+					rs.getString("role"),
 					rs.getString("firstname"),
 					rs.getString("lastname"));
 			} 
