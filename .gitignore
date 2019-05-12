@@ -4,6 +4,8 @@ db.properties
 # Compiled class file
 *.class
 
+.classpath
+
 # Log file
 *.log
 
