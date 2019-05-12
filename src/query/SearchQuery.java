@@ -5,7 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import Common.Item;
 import library.DatabaseConnector;
 
 public class SearchQuery {
@@ -14,6 +16,7 @@ public class SearchQuery {
 	// SQL for searchObject
 	private static String getBookQuery = "SELECT * FROM Book WHERE bookName LIKE ?";
 	private static String getArticleQuery = "SELECT * FROM Article WHERE articleName LIKE ?";
+	private static String getDVDQuery = "SELECT * FROM DVD WHERE title LIKE ?";
 	
 	public SearchQuery() {
 		try {
@@ -28,29 +31,42 @@ public class SearchQuery {
 		}
 	}
 	
-	public void searchObject(String stringQuery, String type) {
+	public ArrayList<Item> searchForObjects(String stringQuery, String type) {
 		String query;
-		if (type.equals("Book")) {
+		ArrayList<Item> searchResult = new ArrayList<Item>();
+
+		switch (type) {
+		case "Book":
 			query = getBookQuery;
-		} else {
+			break;
+		case "Article":
 			query = getArticleQuery;
+			break;
+		case "DVD":
+			query = getDVDQuery;
+			break;
+		default:
+			query = "";
+			break;
 		}
+
 		// prepares a SQL-statement
 		try (PreparedStatement getObjects = connection.prepareStatement(query)){
+
 			// executes prepared statement
 			getObjects.setString(1, "%" + stringQuery + "%");
 
 			ResultSet rs = getObjects.executeQuery();
 
 			while (rs.next()) {
-				//System.out.println(rs.getString(1));
-				//System.out.println(rs.getString(2));
+				searchResult.add(new Item(rs.getInt(1), rs.getString(2), rs.getInt(3)));
 			}
 		}
 		catch (SQLException sqlException) {
 			System.out.print(sqlException.getMessage());
 			sqlException.printStackTrace();
 		}
+		return searchResult;
 		
 	}
 

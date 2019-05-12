@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import controller.SearchController;
@@ -17,6 +18,8 @@ import java.awt.Insets;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -25,19 +28,24 @@ import javax.swing.Action;
 import javax.swing.JTable;
 import java.awt.ScrollPane;
 
-public class SearchObjectView extends JPanel {
+public class SearchObjectView extends JPanel implements Observer{
 	private JTextField textField;
 	private final Action action = new SwingAction();
 	private JTable table;
+	private JScrollPane scrollPane;
+	private SearchModel searchModel;
+	private DefaultTableModel tableModel;
 
 	/**
 	 * Create the panel.
 	 */
 	public SearchObjectView(StateModel state) {
 		
+		searchModel = new SearchModel();
+		SearchController searchController = new SearchController(searchModel);
+
+		searchModel.addObserver(this);
 		
-		SearchController searchController = new SearchController();
-		SearchModel searchModel = new SearchModel();
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{202, 0, 0, 0, 0};
@@ -100,7 +108,8 @@ public class SearchObjectView extends JPanel {
 
 			searchModel.setType(type);
 
-			searchController.searchObject(textField.getText(), type);
+			searchController.searchObject(searchModel, textField.getText(), type);
+			searchModel.getSearchData(tableModel);
 			}
 		});
 		
@@ -110,17 +119,8 @@ public class SearchObjectView extends JPanel {
 		gbc_btnNewButton.gridy = 1;
 		add(btnNewButton, gbc_btnNewButton);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridwidth = 4;
-		gbc_scrollPane.gridx = 0;
-		gbc_scrollPane.gridy = 3;
-		add(scrollPane, gbc_scrollPane);
+		addTable(searchModel);
 		
-		
-		table = new JTable(searchModel.getSearchData(), searchModel.getColumnNames());
-		scrollPane.setViewportView(table);
 	}
 
 	private class SwingAction extends AbstractAction {
@@ -130,5 +130,38 @@ public class SearchObjectView extends JPanel {
 		}
 		public void actionPerformed(ActionEvent e) {
 		}
+	}
+
+	public void createDefaultTableModel(SearchModel searchModel) {
+		tableModel = new DefaultTableModel(searchModel.getColumnNames(),0);
+	}
+	
+	public void addTable(SearchModel searchModel) {
+
+		
+		scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.gridwidth = 4;
+		gbc_scrollPane.gridx = 0;
+		gbc_scrollPane.gridy = 3;
+		add(scrollPane, gbc_scrollPane);
+		
+		
+		createDefaultTableModel(searchModel);
+		// creates table to show results
+		table = new JTable(tableModel);
+		scrollPane.setViewportView(table);
+		
+	}
+	
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		this.remove(scrollPane);
+		this.addTable(searchModel);
+		this.revalidate();
+		this.repaint();
+		
 	}
 }
