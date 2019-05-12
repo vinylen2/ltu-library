@@ -31,6 +31,7 @@ public class BorrowerHomeView extends JPanel implements Observer {
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		this.userLabel = new JLabel(user.getName());
+<<<<<<< HEAD
 		GridBagConstraints gbc_userLabel = new GridBagConstraints();
 		gbc_userLabel.insets = new Insets(0, 0, 5, 0);
 		gbc_userLabel.anchor = GridBagConstraints.WEST;
@@ -75,6 +76,10 @@ public class BorrowerHomeView extends JPanel implements Observer {
 		gbc_btnAddLoans.gridx = 0;
 		gbc_btnAddLoans.gridy = 6;
 		add(btnAddLoans, gbc_btnAddLoans);
+=======
+
+		add(this.userLabel);
+>>>>>>> refs/remotes/origin/master
 
 	}
 

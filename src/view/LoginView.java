@@ -28,7 +28,9 @@ public class LoginView extends JPanel {
 	 */
 	public LoginView(StateModel state, UserModel user) {
 		
+		// create loginController from constructor
 		loginController = new LoginController(state, user);
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{130, 35, 130, 83, 0};
 		gridBagLayout.rowHeights = new int[]{29, 0, 0, 29, 0, 0, 0};

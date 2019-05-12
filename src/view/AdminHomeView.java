@@ -29,7 +29,9 @@ public class AdminHomeView extends JPanel implements Observer {
 	 * Create the panel.
 	 */
 	public AdminHomeView(StateModel state, UserModel user) {
+		// add observable UserModel user
 		user.addObserver(this);
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{63, 117, 129, 112, 0};
 		gridBagLayout.rowHeights = new int[]{29, 0, 0, 29, 0, 0};
