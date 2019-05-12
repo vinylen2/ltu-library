@@ -21,6 +21,7 @@ public class StateModel extends Observable {
 	public void setApplicationState(ApplicationState state) {
 		currentState = state;
 		setChanged();
+
 		// notifies DynamicView about change in state
 		notifyObservers();
 	}

@@ -18,6 +18,7 @@ public class BorrowerHomeView extends JPanel implements Observer {
 	public BorrowerHomeView(StateModel state, UserModel user) {
 		user.addObserver(this);
 		this.userLabel = new JLabel(user.getName());
+
 		add(this.userLabel);
 
 	}
