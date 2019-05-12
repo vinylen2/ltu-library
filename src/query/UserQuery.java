@@ -13,10 +13,7 @@ import model.UserModel;
 
 public class UserQuery {
 	private Connection connection;
-	private static String getUserQuery = 
-			"SELECT * FROM USER u" +
-			"INNER JOIN Role r on r.roleId = u.roleId" +
-			"WHERE u.email = ? AND u.password = ?";
+	private static String getUserQuery = "SELECT * FROM USER u INNER JOIN Role r on r.roleId = u.roleId WHERE u.email = ? AND u.password = ?";
 
 	public UserQuery() {
 		try {

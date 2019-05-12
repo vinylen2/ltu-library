@@ -9,7 +9,9 @@ public class StateModel extends Observable {
 		Login,
 		SearchObject,
 		Admin,
-		Borrower,
+		User,
+		AddBorrower,
+		AddObject,
 	}
 	
 	public ApplicationState getCurrentState() {
