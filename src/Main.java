@@ -1,10 +1,6 @@
 import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JPanel;
-
-import controller.LoginController;
 
 import javax.swing.JFrame;
 
@@ -22,13 +18,11 @@ public class Main{
 
 	private UserModel user;
 	private StateModel state;
-	private LoginController loginController;
 
 
 	public Main() {
 		user = new UserModel();
 		state = new StateModel();
-		loginController = new LoginController(state, user);
 		
 
 		HashMap <ApplicationState, JPanel> states = new HashMap <ApplicationState, JPanel>();

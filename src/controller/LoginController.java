@@ -6,7 +6,6 @@ import model.StateModel;
 import model.StateModel.ApplicationState;
 import model.UserModel;
 import query.UserQuery;
-import view.AdminHomeView;
 import view.LoginView;
 
 public class LoginController{
@@ -16,7 +15,6 @@ public class LoginController{
 	private UserQuery query;
 	private StateModel state;
 	private UserController userController;
-	private AdminHomeView adminView;
 
 	public LoginController(StateModel state, UserModel user) {
 		this.user = user;
@@ -31,7 +29,6 @@ public class LoginController{
 			userController.updateUser(newUser);
 			ApplicationState stateEnum = ApplicationState.valueOf(newUser.role);
 			state.setApplicationState(stateEnum);
-			adminView.revalidate();
 		}
 	}
 
