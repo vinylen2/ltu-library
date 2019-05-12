@@ -8,9 +8,4 @@ public class UserController {
 	public UserController(UserModel user) {
 		this.user = user;
 	}
-	
-	public void updateUser(User newUser) {
-		user.setUser(newUser);
-	}
-
 }

@@ -4,7 +4,7 @@ import java.util.Observable;
 
 import Common.User;
 
-public class UserModel {
+public class UserModel extends Observable {
 	private User user;
 
 	public UserModel(boolean isLoggedIn, int userId, String role, String firstname, String lastname) {
@@ -22,12 +22,12 @@ public class UserModel {
 	
 	public void setUser(User newUser) {
 		this.user = newUser;
+		setChanged();
+		// notifies DynamicView about change in state
+		notifyObservers();
 	}
 	
-	public User getUser() {
-		return this.user;
-	}
-	
+	// byt till isLoggedIn, skickar vidare intern variabel
 	public boolean hasLoggedIn() {
 		return user.isLoggedIn;
 	}

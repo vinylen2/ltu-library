@@ -26,7 +26,7 @@ public class LoginController{
 	public void logIn(String username, String password) {
 		newUser = query.logIn(username, password);
 		if (newUser.isLoggedIn) {
-			userController.updateUser(newUser);
+			user.setUser(newUser);
 			ApplicationState stateEnum = ApplicationState.valueOf(newUser.role);
 			state.setApplicationState(stateEnum);
 		}

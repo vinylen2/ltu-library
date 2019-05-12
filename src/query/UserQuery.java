@@ -40,11 +40,11 @@ public class UserQuery {
 
 			if (rs.next()) {
 				user = new User(
-						true,
-						rs.getInt("userId"),
-						"Admin",
-						rs.getString("firstname"),
-						rs.getString("lastname"));
+					true,
+					rs.getInt("userId"),
+					"Admin",
+					rs.getString("firstname"),
+					rs.getString("lastname"));
 			} 
 		}
 		catch (SQLException sqlException) {
