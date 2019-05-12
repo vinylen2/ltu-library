@@ -13,6 +13,10 @@ import model.UserModel;
 
 public class UserQuery {
 	private Connection connection;
+	private static String getUserQuery = 
+			"SELECT * FROM USER u" +
+			"INNER JOIN Role r on r.roleId = u.roleId" +
+			"WHERE u.email = ? AND u.password = ?";
 
 	public UserQuery() {
 		try {
@@ -31,12 +35,11 @@ public class UserQuery {
 	public User logIn(String username, String password) {
 		User user = new User();
 
-		try (PreparedStatement selectAllUsers = connection.prepareStatement(
-				"SELECT * FROM User u INNER JOIN Role r ON r.roleId =  u.roleId WHERE u.email = ? AND u.password = ?;")){
-			selectAllUsers.setString(1, username);
-			selectAllUsers.setString(2, password);
+		try (PreparedStatement logInUser = connection.prepareStatement(getUserQuery)){
+			logInUser.setString(1, username);
+			logInUser.setString(2, password);
 
-			ResultSet rs = selectAllUsers.executeQuery();
+			ResultSet rs = logInUser.executeQuery();
 
 			if (rs.next()) {
 				user = new User(
