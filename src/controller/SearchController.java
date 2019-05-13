@@ -1,14 +1,14 @@
 package controller;
 
 import model.SearchModel;
-import query.SearchQuery;
+import query.ObjectQuery;
 
 public class SearchController {
-	private SearchQuery query;
+	private ObjectQuery query;
 	private SearchModel model;
 	
 	public SearchController(SearchModel searchModel) {
-		query = new SearchQuery();
+		query = new ObjectQuery();
 		model = searchModel;
 	}
 	

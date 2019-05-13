@@ -55,7 +55,7 @@ public class SearchModel extends Observable{
 			case "DVD":
 				columnNames[0] = "dvdId";
 				columnNames[1] = "dvdName";
-				columnNames[2] = "ageLimit";
+				columnNames[2] = "length";
 				break;
 		}
 		return columnNames;

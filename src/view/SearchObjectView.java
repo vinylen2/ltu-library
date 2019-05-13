@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 
 import model.SearchModel;
 import model.StateModel;
+import model.UserModel;
+
 import javax.swing.JLabel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -11,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import controller.ObjectController;
 import controller.SearchController;
 
 import java.awt.Insets;
@@ -35,11 +38,15 @@ public class SearchObjectView extends JPanel implements Observer{
 	private JScrollPane scrollPane;
 	private SearchModel searchModel;
 	private DefaultTableModel tableModel;
+	private UserModel user;
+	private ButtonGroup bgroup;
+	private ObjectController objectController = new ObjectController();
 
 	/**
 	 * Create the panel.
 	 */
-	public SearchObjectView(StateModel state) {
+	public SearchObjectView(StateModel state, UserModel user) {
+		this.user = user;
 		
 		searchModel = new SearchModel();
 		SearchController searchController = new SearchController(searchModel);
@@ -61,6 +68,7 @@ public class SearchObjectView extends JPanel implements Observer{
 		gbc_label.gridx = 1;
 		gbc_label.gridy = 0;
 		add(label, gbc_label);
+		
 
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("Article");
 		rdbtnNewRadioButton.setActionCommand("Article");
@@ -87,7 +95,7 @@ public class SearchObjectView extends JPanel implements Observer{
 		gbc_rdbtnNewRadioButton_2.gridy = 2;
 		add(rdbtnNewRadioButton_2, gbc_rdbtnNewRadioButton_2);
 
-        ButtonGroup bgroup = new ButtonGroup();
+        bgroup = new ButtonGroup();
         bgroup.add(rdbtnNewRadioButton);
         bgroup.add(rdbtnNewRadioButton_1);
         bgroup.add(rdbtnNewRadioButton_2);
@@ -133,7 +141,11 @@ public class SearchObjectView extends JPanel implements Observer{
 	}
 
 	public void createDefaultTableModel(SearchModel searchModel) {
-		tableModel = new DefaultTableModel(searchModel.getColumnNames(),0);
+		tableModel = new DefaultTableModel(searchModel.getColumnNames(),0) {
+		  public boolean isCellEditable(int rowIndex, int mColIndex) {
+			  return false;
+			}
+		};
 	}
 	
 	public void addTable(SearchModel searchModel) {
@@ -158,6 +170,28 @@ public class SearchObjectView extends JPanel implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
+		// checks if user is an admin to display add object button
+		if (user.getRole().equals("Admin")) {
+			JButton btnAddObject = new JButton("Add object");
+			GridBagConstraints gbc_btnAddObject = new GridBagConstraints();
+
+			// listener for adding object
+			btnAddObject.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				// gets type from selected buttongroup (same as search)
+				String type = bgroup.getSelection().getActionCommand();
+
+				// gets object ID from selection in jtable
+				int id = (int) table.getValueAt(table.getSelectedRow(), 0);
+					objectController.insertObject(id, type);
+				}
+			});
+			gbc_btnAddObject.insets = new Insets(0, 0, 5, 5);
+			gbc_btnAddObject.gridx = 2;
+			gbc_btnAddObject.gridy = 1;
+			add(btnAddObject, gbc_btnAddObject);
+		}
+
 		this.remove(scrollPane);
 		this.addTable(searchModel);
 		this.revalidate();

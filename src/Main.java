@@ -9,6 +9,7 @@ import model.UserModel;
 import model.StateModel;
 import view.AddBorrowerView;
 import view.AddLoanView;
+import view.AddObjectView;
 import view.AdminHomeView;
 import view.BorrowerHomeView;
 import view.DynamicView;
@@ -30,7 +31,7 @@ public class Main{
 		HashMap <ApplicationState, JPanel> states = new HashMap <ApplicationState, JPanel>();
 		states.put(ApplicationState.Home, new HomeView(state));
 		states.put(ApplicationState.Login, new LoginView(state, user));
-		states.put(ApplicationState.SearchObject, new SearchObjectView(state));
+		states.put(ApplicationState.SearchObject, new SearchObjectView(state, user));
 		states.put(ApplicationState.Admin, new AdminHomeView(state, user));
 		states.put(ApplicationState.User, new BorrowerHomeView(state, user));
 		states.put(ApplicationState.AddBorrower, new AddBorrowerView(state, user));

@@ -50,6 +50,7 @@ public class AdminHomeView extends JPanel implements Observer {
 		JButton btnAddObject = new JButton("Add object");
 		btnAddObject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				state.setApplicationState(ApplicationState.AddObject);
 			}
 		});
 		GridBagConstraints gbc_btnAddObject = new GridBagConstraints();
@@ -62,6 +63,7 @@ public class AdminHomeView extends JPanel implements Observer {
 		JButton btnSearchObject = new JButton("Search object");
 		btnSearchObject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				state.setApplicationState(ApplicationState.SearchObject);
 			}
 		});
 		GridBagConstraints gbc_btnSearchObject = new GridBagConstraints();
