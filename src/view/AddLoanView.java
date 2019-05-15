@@ -48,6 +48,7 @@ public class AddLoanView extends JPanel implements Observer{
 	private UserController userController;
 	private ButtonGroup bgroup;
 	private ObjectController objectController = new ObjectController();
+	private JTable table_1;
 
 	/**
 	 * Create the panel.
@@ -57,55 +58,122 @@ public class AddLoanView extends JPanel implements Observer{
 		this.user = user;
 		this.loan = loan;
 
-		this.userController= new UserController(user);
+		this.userController = new UserController(user);
+		this.loanController = new LoanController(user, loan);
 
 		loan.addObserver(this);
 
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0};
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		setLayout(gridBagLayout);
+
+		JButton button = new JButton("<");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switch(user.getRole()) {
+				case "Admin": 
+					state.setApplicationState(ApplicationState.Admin);
+					break;
+				case "Borrower": 
+					state.setApplicationState(ApplicationState.User);
+					break;
+				default:
+					state.setApplicationState(ApplicationState.Home);
+					break;
+				}
+			}
+		});
+		
+		JButton btnNewButton_1 = new JButton("Låna");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loanController.loanBooks();
+
+			}
+		});
+		
+		JButton btnNewButton_2 = new JButton("Ta bort");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				// gets object ID from selection in jtable
+				int iid = (int) table_1.getValueAt(table_1.getSelectedRow(), 0);
+				String id = Integer.toString(iid);
+				loanController.removeItemFromPending(id);
+				loan.getLoanData(tableModel);
+
+			}
+		});
+		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
+		gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_2.gridx = 1;
+		gbc_btnNewButton_2.gridy = 0;
+		add(btnNewButton_2, gbc_btnNewButton_2);
+		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
+		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_1.gridx = 2;
+		gbc_btnNewButton_1.gridy = 0;
+		add(btnNewButton_1, gbc_btnNewButton_1);
+		GridBagConstraints gbc_button = new GridBagConstraints();
+		gbc_button.insets = new Insets(0, 0, 5, 0);
+		gbc_button.gridx = 4;
+		gbc_button.gridy = 0;
+		add(button, gbc_button);
+
+		JButton btnNewButton = new JButton("Uppdatera vy");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			loan.getLoanData(tableModel);
+			}
+		});
+
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 3;
+		gbc_btnNewButton.gridy = 0;
+		add(btnNewButton, gbc_btnNewButton);
+		
+
 		addTable(loan);
 		loan.getLoanData(tableModel);
-		
 	}
 
 	private class SwingAction extends AbstractAction {
 		public SwingAction() {
 			putValue(NAME, "SwingAction");
 			putValue(SHORT_DESCRIPTION, "Some short description");
-			System.out.println("when does this run?");
 		}
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("when does this run2?");
 		}
 	}
 
-	public void createDefaultTableModel(LoanModel loan) {
-		tableModel = new DefaultTableModel(loan.getColumnNames(),0) {
-		  public boolean isCellEditable(int rowIndex, int mColIndex) {
-			  return false;
-			}
-		};
-	}
 	
 	public void addTable(LoanModel loan) {
-		scrollPane = new JScrollPane();
-		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
-		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridwidth = 4;
-		gbc_scrollPane.gridx = 0;
-		gbc_scrollPane.gridy = 1;
-		setLayout(new GridLayout(0, 1, 0, 0));
-		add(scrollPane);
-		// creates table to show results
-
-		createDefaultTableModel(loan);
-
-		table = new JTable(tableModel);
-		scrollPane.setViewportView(table);
-		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 0);
-		gbc_btnNewButton_1.gridx = 3;
-		gbc_btnNewButton_1.gridy = 1;
+		createDefaultTableModel();
 		
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
+		gbc_scrollPane_1.gridwidth = 5;
+		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane_1.gridx = 0;
+		gbc_scrollPane_1.gridy = 1;
+		add(scrollPane_1, gbc_scrollPane_1);
+		
+		table_1 = new JTable(tableModel);
+		scrollPane_1.setViewportView(table_1);
+		
+	}
+	public void createDefaultTableModel() {
+		tableModel = new DefaultTableModel(loan.getColumnNames(), 0) {
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
+				return false;
+			}
+		};
 	}
 	
 	@Override

@@ -23,6 +23,10 @@ public class UserModel extends Observable {
 		user = new User();
 	}
 	
+	public int getId() {
+		return user.userId;
+	}
+	
 	public void setUser(User newUser) {
 		this.user = newUser;
 

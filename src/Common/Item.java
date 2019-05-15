@@ -2,15 +2,17 @@ package Common;
 
 public class Item {
 	private int ID;
+	private int objectId;
 	private String name;
 	private int SNorAge;
 	private String type;
 	
-	public Item(int id, String name, int SNorAge, String type) {
-		this.ID = id;
+	public Item(int objectId, String name, int SNorAge, String type, int bookId) {
+		this.ID = bookId;
 		this.name = name;
 		this.SNorAge = SNorAge;
 		this.type = type;
+		this.objectId = objectId;
 	}
 	
 	public int getId() {
@@ -19,6 +21,14 @@ public class Item {
 
 	public String getIdInString() {
 		return Integer.toString(this.ID);
+	}
+	
+	public String getObjectIdInString() {
+		return Integer.toString(this.objectId);
+	}
+	
+	public int getObjectId() {
+		return this.objectId;
 	}
 
 	public String getType() {

@@ -11,18 +11,18 @@ import Common.Item;
 public class LoanModel extends Observable{
 	private String type = "Borrower";
 	private HashMap<String, Item> pendingLoans = new HashMap<String, Item>(); 
-	private DefaultTableModel tableModel = new DefaultTableModel();
+	private DefaultTableModel tableModel;
 	
 	public LoanModel() {
-
 	}
+
 
 	public void setType(String type) {
 		this.type = type;		
 		setChanged();
 		notifyObservers();
 	}
-	
+
 	public void addItemToPending(String id, Item item) {
 		this.pendingLoans.put(id, item);
 	}
@@ -35,10 +35,14 @@ public class LoanModel extends Observable{
 		return pendingLoans.get(id);
 	}
 	
+	public HashMap<String, Item> getAllPendingLoans() {
+		return this.pendingLoans;
+	}
+	
 	public void getLoanData(DefaultTableModel tableModel) {
 		// modifies the private arrayList to array
 		for (Item item : pendingLoans.values()) {
-			int ID = item.getId();
+			int ID = item.getObjectId();
 			String name = item.getName();
 			int SNorAge = item.getSNorAge();
 			Object[] data = { ID, name, SNorAge };
@@ -67,5 +71,15 @@ public class LoanModel extends Observable{
 		}
 		return columnNames;
 	}
+
+	public void createDefaultTableModel() {
+		System.out.println("created table");
+		tableModel = new DefaultTableModel(getColumnNames(), 0) {
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
+				return false;
+			}
+		};
+	}
+	
 
 }

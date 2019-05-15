@@ -230,6 +230,7 @@ public class SearchObjectView extends JPanel implements Observer{
 				// gets object ID from selection in jtable
 				int iid = (int) table.getValueAt(table.getSelectedRow(), 0);
 				String id = Integer.toString(iid);
+				searchModel.getItem(id);
 				
 				loanController.addItemToPending(id, searchModel.getItem(id));
 			}

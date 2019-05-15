@@ -25,7 +25,7 @@ public class SearchModel extends Observable{
 		this.searchItems.clear();
 
 		for (Item item : searchResult) {
-			this.searchItems.put(item.getIdInString(), item);
+			this.searchItems.put(item.getObjectIdInString(), item);
 		}
 	}
 	
@@ -35,8 +35,9 @@ public class SearchModel extends Observable{
 	
 	public void getSearchData(DefaultTableModel tableModel) {
 		// modifies the private arrayList to array
+		System.out.println(searchItems.size());
 		for (Item item : searchItems.values()) {
-			int ID = item.getId();
+			int ID = item.getObjectId();
 			String name = item.getName();
 			int SNorAge = item.getSNorAge();
 			Object[] data = { ID, name, SNorAge };
