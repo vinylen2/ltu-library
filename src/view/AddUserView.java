@@ -210,6 +210,8 @@ public class AddUserView extends JPanel {
 		add(textField_7, gbc_textField_7);
 		textField_7.setColumns(10);
 		
+		// roll to select the type of user
+		
 		lblRoll = new JLabel("Roll");
 		GridBagConstraints gbc_lblRoll = new GridBagConstraints();
 		gbc_lblRoll.insets = new Insets(0, 0, 5, 5);
