@@ -7,9 +7,9 @@ import javax.swing.JFrame;
 import model.StateModel.ApplicationState;
 import model.UserModel;
 import model.StateModel;
-import view.AddBorrowerView;
+import view.AddUserView;
 import view.AddLoanView;
-import view.AddObjectView;
+
 import view.AdminHomeView;
 import view.BorrowerHomeView;
 import view.DynamicView;
@@ -34,7 +34,7 @@ public class Main{
 		states.put(ApplicationState.SearchObject, new SearchObjectView(state, user));
 		states.put(ApplicationState.Admin, new AdminHomeView(state, user));
 		states.put(ApplicationState.User, new BorrowerHomeView(state, user));
-		states.put(ApplicationState.AddBorrower, new AddBorrowerView(state, user));
+		states.put(ApplicationState.AddBorrower, new AddUserView(state, user));
 		states.put(ApplicationState.AddLoan, new AddLoanView(state, user));
 
 		JFrame frame = new JFrame("Library system");

@@ -63,5 +63,7 @@ public class HomeView extends JPanel {
 		gbc_btnNewButton_1.gridx = 1;
 		gbc_btnNewButton_1.gridy = 2;
 		add(btnNewButton_1, gbc_btnNewButton_1);
+		
 	}
 }
+
