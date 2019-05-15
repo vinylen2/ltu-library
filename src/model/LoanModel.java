@@ -8,57 +8,56 @@ import javax.swing.table.DefaultTableModel;
 
 import Common.Item;
 
-public class SearchModel extends Observable{
-	private String type = "Book";
-	private HashMap<String, Item> searchItems = new HashMap<String, Item>();
+public class LoanModel extends Observable{
+	private String type = "Borrower";
+	private HashMap<String, Item> pendingLoans = new HashMap<String, Item>(); 
 	private DefaultTableModel tableModel = new DefaultTableModel();
 	
+	public LoanModel() {
+		Item item = new Item(3, "Harry Potter 3", 231231, "Book");
+		this.pendingLoans.put("3", item);
+		setChanged();
+		notifyObservers();
+		
+	}
+
 	public void setType(String type) {
 		this.type = type;		
 		setChanged();
 		notifyObservers();
 	}
 	
+	public void addItemToPending(String id, Item item) {
+		this.pendingLoans.put(id, item);
+	}
 	
-	public void setSearchResult(ArrayList<Item> searchResult) {
-		// clear hashmap because new result is incoming
-		this.searchItems.clear();
-
-		for (Item item : searchResult) {
-			this.searchItems.put(item.getIdInString(), item);
-		}
+	public void removeItemFromPending(String itemId) {
+		this.pendingLoans.remove(itemId);
 	}
 	
 	public Item getItem(String id) {
-		return searchItems.get(id);
+		return pendingLoans.get(id);
 	}
 	
-	public void getSearchData(DefaultTableModel tableModel) {
+	public void getLoanData(DefaultTableModel tableModel) {
 		// modifies the private arrayList to array
-		for (Item item : searchItems.values()) {
+		System.out.println("delivering loan data to table");
+		for (Item item : pendingLoans.values()) {
 			int ID = item.getId();
 			String name = item.getName();
 			int SNorAge = item.getSNorAge();
 			Object[] data = { ID, name, SNorAge };
-			//Object[] data = { item.getId(), item.getName(), item.getSNorAge() };
 			tableModel.addRow(data);
 		}
-
-		//for (int i = 0; i < searchItems.size(); i++) {
-		//	int ID = searchItems.get(i).getId();
-		//	String name = searchItems.get(i).getName();
-		//	int SNorAge = searchItems.get(i).getSNorAge();
-		//}
-
 	}
 	
 	public String[] getColumnNames() {
 	String[] columnNames = new String[3];
 		switch (this.type) {
-			case "Book":
-				columnNames[0] = "bookId";
-				columnNames[1] = "bookName";
-				columnNames[2] = "ISBN";
+			case "Borrower":
+				columnNames[0] = "Id";
+				columnNames[1] = "Title";
+				columnNames[2] = "Serial number";
 				break;
 			case "Article":
 				columnNames[0] = "articleId";

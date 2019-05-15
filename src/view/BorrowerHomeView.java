@@ -67,7 +67,6 @@ public class BorrowerHomeView extends JPanel implements Observer {
 		JButton btnAddLoans = new JButton("Add loans");
 		btnAddLoans.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				state.setApplicationState(ApplicationState.AddLoan);
 			}
 		});

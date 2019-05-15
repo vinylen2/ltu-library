@@ -2,8 +2,10 @@ package view;
 
 import javax.swing.JPanel;
 
+import model.LoanModel;
 import model.SearchModel;
 import model.StateModel;
+import model.StateModel.ApplicationState;
 import model.UserModel;
 
 import javax.swing.JLabel;
@@ -13,8 +15,10 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import controller.LoanController;
 import controller.ObjectController;
 import controller.SearchController;
+import controller.UserController;
 
 import java.awt.Insets;
 
@@ -36,20 +40,25 @@ public class SearchObjectView extends JPanel implements Observer{
 	private final Action action = new SwingAction();
 	private JTable table;
 	private JScrollPane scrollPane;
-	private SearchModel searchModel;
+	private SearchModel searchModel = new SearchModel();
 	private DefaultTableModel tableModel;
 	private UserModel user;
+	private LoanModel loan;
 	private ButtonGroup bgroup;
 	private ObjectController objectController = new ObjectController();
+	private SearchController searchController;
+	private LoanController loanController;
 
 	/**
 	 * Create the panel.
 	 */
-	public SearchObjectView(StateModel state, UserModel user) {
+	public SearchObjectView(StateModel state, UserModel user, LoanModel loan) {
 		this.user = user;
+		this.loan = loan;
+
+
 		
-		searchModel = new SearchModel();
-		SearchController searchController = new SearchController(searchModel);
+		searchController = new SearchController(searchModel);
 
 		searchModel.addObserver(this);
 		
@@ -68,6 +77,29 @@ public class SearchObjectView extends JPanel implements Observer{
 		gbc_label.gridx = 1;
 		gbc_label.gridy = 0;
 		add(label, gbc_label);
+		
+		JButton btnNewButton_1 = new JButton("<");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switch(user.getRole()) {
+				case "Admin": 
+					state.setApplicationState(ApplicationState.Admin);
+					break;
+				case "Borrower": 
+					state.setApplicationState(ApplicationState.User);
+					break;
+				default:
+					state.setApplicationState(ApplicationState.Home);
+					break;
+				}
+			}
+		});
+		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
+		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 0);
+		gbc_btnNewButton_1.gridx = 3;
+		gbc_btnNewButton_1.gridy = 1;
+		add(btnNewButton_1, gbc_btnNewButton_1);
+		
 		
 
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("Article");
@@ -190,6 +222,26 @@ public class SearchObjectView extends JPanel implements Observer{
 			gbc_btnAddObject.gridx = 2;
 			gbc_btnAddObject.gridy = 1;
 			add(btnAddObject, gbc_btnAddObject);
+		}
+		
+		if (user.isLoggedIn()) {
+		JButton btnAddToLoan = new JButton("Add to loan cart");
+		btnAddToLoan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				// gets object ID from selection in jtable
+				int iid = (int) table.getValueAt(table.getSelectedRow(), 0);
+				String id = Integer.toString(iid);
+				
+				loanController.addItemToPending(id, searchModel.getItem(id));
+			}
+		});
+		GridBagConstraints gbc_btnAddToLoan = new GridBagConstraints();
+		gbc_btnAddToLoan.insets = new Insets(0, 0, 5, 5);
+		gbc_btnAddToLoan.gridx = 0;
+		gbc_btnAddToLoan.gridy = 2;
+		add(btnAddToLoan, gbc_btnAddToLoan);
+			
 		}
 
 		this.remove(scrollPane);

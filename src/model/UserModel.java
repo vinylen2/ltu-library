@@ -1,7 +1,10 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 
+import Common.Item;
 import Common.User;
 
 public class UserModel extends Observable {
@@ -29,7 +32,7 @@ public class UserModel extends Observable {
 	}
 	
 	// byt till isLoggedIn, skickar vidare intern variabel
-	public boolean hasLoggedIn() {
+	public boolean isLoggedIn() {
 		return user.isLoggedIn;
 	}
 	

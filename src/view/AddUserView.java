@@ -5,11 +5,13 @@ import javax.swing.JPanel;
 import model.StateModel;
 import model.UserModel;
 
+import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 
+import controller.UserController;
 import library.DatabaseConnector;
 
 import java.awt.Insets;
@@ -22,6 +24,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 
 public class AddUserView extends JPanel {
 	private JTextField textField;
@@ -42,14 +45,19 @@ public class AddUserView extends JPanel {
 	private JLabel label;
 	
 	
-	public Connection connection;
 	private JLabel lblRoll;
 	private JComboBox comboBox;
+	private UserController userController;
 
 	/**
 	 * Create the panel.
 	 */
+	
+	
 	public AddUserView(StateModel state, UserModel user) {
+		
+		userController = new UserController(user);
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 193, 63, 0};
 		gridBagLayout.rowHeights = new int[]{23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -75,6 +83,7 @@ public class AddUserView extends JPanel {
 		gbc_textField.gridy = 1;
 		add(textField, gbc_textField);
 		textField.setColumns(10);
+		
 		
 		lblLastName = new JLabel("Last name");
 		GridBagConstraints gbc_lblLastName = new GridBagConstraints();
@@ -210,6 +219,8 @@ public class AddUserView extends JPanel {
 		add(textField_7, gbc_textField_7);
 		textField_7.setColumns(10);
 		
+			
+			
 		// roll to select the type of user
 		
 		lblRoll = new JLabel("Roll");
@@ -223,60 +234,24 @@ public class AddUserView extends JPanel {
 		JButton btnKnapp = new JButton("Add user");
 		btnKnapp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int roleIdValue = 0;
-				try {
-					connection = new DatabaseConnector().getConnection();
-					
-					
-					 String firstName = textField.getText();
-					 String lastName = textField_1.getText();
-					 String SSN = textField_2.getText();
-					 String email = textField_3.getText();
-					 String streetAdress = textField_4.getText();
-					 String postalCode = textField_5.getText();
-					 String mobileNumber = textField_6.getText();
-					 String password = textField_7.getText();
-					 String roleId = Integer.toString(roleIdValue);
-					 
-					 String roleValue=(String)comboBox.getSelectedItem();
-					 if (roleValue.equals("Admin")) {
-						 roleIdValue = 1;
-					 }
-					 else if (roleValue.equals("Librarian"))
-					 {
-						 roleIdValue = 2;
-					 }
-					 else if (roleValue.equals("Borrower")) {
-						 
-						 roleIdValue = 3;
-					 }
-						 
-						 
-					 
-					 
-					 PreparedStatement pst = 
-							connection.prepareStatement("insert into user (roleId, firstname, lastname, SSN, email, streetAdress, postalCode, mobileNumber, password) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-							pst.setString(1, roleId);
-							pst.setString(2, firstName);
-							pst.setString(3, lastName);
-							pst.setString(4, SSN);
-							pst.setString(5, email);
-							pst.setString(6, streetAdress);
-							pst.setString(7, postalCode);
-							pst.setString(8, mobileNumber);
-							pst.setString(9, password);
-							
-							pst.executeUpdate();
-									
-				}
-				catch (SQLException sqlException) {
-					System.out.print(sqlException.getMessage());
-					sqlException.printStackTrace();
-					System.exit(1);;
-				} catch (IOException ioException) {
-					System.out.print(ioException.getMessage());
-				}
-				
+
+			 String role = (String) comboBox.getSelectedItem();
+			 String firstName = textField.getText();
+			 String lastName = textField_1.getText();
+			 String SSN = textField_2.getText();
+			 String email = textField_3.getText();
+			 String streetAdress = textField_4.getText();
+			 String postalCode = textField_5.getText();
+			 String mobileNumber = textField_6.getText();
+			 String password = textField_7.getText();
+			 
+			 
+			 String[] formInput = {role, firstName, lastName, SSN, email, streetAdress, postalCode, mobileNumber, password};
+			 if (verifyForm(formInput)) {
+				 userController.createUser(role, firstName, lastName, SSN, email, streetAdress, postalCode, mobileNumber, password);
+			 } else {
+				 System.out.println("not submitted");
+			 }
 				
 			}
 		});
@@ -285,7 +260,6 @@ public class AddUserView extends JPanel {
 		comboBox.addItem("Borrower");
 		comboBox.addItem("Librarian");
 		comboBox.addItem("Admin");
-		comboBox.setSelectedItem(null);
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -298,10 +272,20 @@ public class AddUserView extends JPanel {
 		gbc_btnKnapp.gridx = 2;
 		gbc_btnKnapp.gridy = 9;
 		add(btnKnapp, gbc_btnKnapp);
-		
-		
-
 	}
 	
+	
+	// function to verify the form
+	public boolean verifyForm(String[] formInput) {
+		boolean isCompleted = true;
+		
+		for (int i = 0; i < formInput.length; i++) {
+			if (formInput[i].length() == 0) {
+				isCompleted = false;
+			}
+		}
+		return isCompleted;
+		
+	}
 
 }

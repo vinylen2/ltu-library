@@ -15,5 +15,5 @@ public class SearchController {
 	public void searchObject(SearchModel searchModel, String searchQuery, String type) {
 		searchModel.setSearchResult(query.searchForObjects(searchQuery, type));
 	}
-
+	
 }

@@ -63,7 +63,7 @@ public class ObjectQuery {
 			ResultSet rs = getObjects.executeQuery();
 
 			while (rs.next()) {
-				searchResult.add(new Item(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+				searchResult.add(new Item(rs.getInt(1), rs.getString(2), rs.getInt(3), type));
 			}
 		}
 		catch (SQLException sqlException) {

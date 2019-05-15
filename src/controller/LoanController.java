@@ -11,23 +11,30 @@ import library.DatabaseConnector;
 import Common.Item;
 import Common.User;
 import library.DatabaseConnector;
+import model.LoanModel;
 import model.UserModel;
 import query.UserQuery;
 
-public class UserController {
+public class LoanController {
 	private UserModel user;
+	private LoanModel loan;
 	private UserQuery userQuery = new UserQuery();
 
-	public UserController(UserModel user) {
+	public LoanController(UserModel user, LoanModel loan) {
 		this.user = user;
+		this.loan = loan;
 	}
 	
-	public UserController() {
+	public LoanController() {
 		
 	}
 	
 	public void addItemToPending(String id, Item item) {
-		user.addItemToPending(id, item);
+		loan.addItemToPending(id, item);
+	}
+	
+	public void removeItemFromPending(String id) {
+		loan.removeItemFromPending(id);
 	}
 	
 	public void createUser(
