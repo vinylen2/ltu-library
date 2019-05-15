@@ -14,11 +14,7 @@ public class LoanModel extends Observable{
 	private DefaultTableModel tableModel = new DefaultTableModel();
 	
 	public LoanModel() {
-		Item item = new Item(3, "Harry Potter 3", 231231, "Book");
-		this.pendingLoans.put("3", item);
-		setChanged();
-		notifyObservers();
-		
+
 	}
 
 	public void setType(String type) {
@@ -41,7 +37,6 @@ public class LoanModel extends Observable{
 	
 	public void getLoanData(DefaultTableModel tableModel) {
 		// modifies the private arrayList to array
-		System.out.println("delivering loan data to table");
 		for (Item item : pendingLoans.values()) {
 			int ID = item.getId();
 			String name = item.getName();

@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import model.LoanModel;
 import model.SearchModel;
 import model.StateModel;
+import model.StateModel.ApplicationState;
 import model.UserModel;
 
 import javax.swing.JLabel;
@@ -41,9 +42,9 @@ public class AddLoanView extends JPanel implements Observer{
 	private JScrollPane scrollPane;
 	private LoanModel loan;
 	private LoanController loanController;
-	private SearchModel searchModel = new SearchModel();
 	private DefaultTableModel tableModel;
 	private UserModel user;
+	private StateModel state;
 	private UserController userController;
 	private ButtonGroup bgroup;
 	private ObjectController objectController = new ObjectController();
@@ -52,8 +53,10 @@ public class AddLoanView extends JPanel implements Observer{
 	 * Create the panel.
 	 */
 	public AddLoanView(StateModel state, UserModel user, LoanModel loan) {
+		this.state = state;
 		this.user = user;
 		this.loan = loan;
+
 		this.userController= new UserController(user);
 
 		loan.addObserver(this);
@@ -67,8 +70,10 @@ public class AddLoanView extends JPanel implements Observer{
 		public SwingAction() {
 			putValue(NAME, "SwingAction");
 			putValue(SHORT_DESCRIPTION, "Some short description");
+			System.out.println("when does this run?");
 		}
 		public void actionPerformed(ActionEvent e) {
+			System.out.println("when does this run2?");
 		}
 	}
 
@@ -81,9 +86,6 @@ public class AddLoanView extends JPanel implements Observer{
 	}
 	
 	public void addTable(LoanModel loan) {
-		
-		
-		createDefaultTableModel(loan);
 		scrollPane = new JScrollPane();
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
@@ -94,6 +96,9 @@ public class AddLoanView extends JPanel implements Observer{
 		setLayout(new GridLayout(0, 1, 0, 0));
 		add(scrollPane);
 		// creates table to show results
+
+		createDefaultTableModel(loan);
+
 		table = new JTable(tableModel);
 		scrollPane.setViewportView(table);
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();

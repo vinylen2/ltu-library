@@ -26,10 +26,6 @@ public class UserController {
 		
 	}
 	
-	public void addItemToPending(String id, Item item) {
-		user.addItemToPending(id, item);
-	}
-	
 	public void createUser(
 		String role, 
 		String firstName, 

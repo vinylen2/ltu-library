@@ -56,12 +56,10 @@ public class SearchObjectView extends JPanel implements Observer{
 		this.user = user;
 		this.loan = loan;
 
-
-		
+		this.loanController = new LoanController(user, loan);
 		searchController = new SearchController(searchModel);
 
 		searchModel.addObserver(this);
-		
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{202, 0, 0, 0, 0};
