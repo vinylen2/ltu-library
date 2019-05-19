@@ -39,9 +39,30 @@ public class LoanController {
 	}
 	
 	public void loanBooks() {
+		createLoans(user.getId());
+	}
+	
+	public void loanBooksForUser(String SSN) {
+		int userId = objectQuery.getUserIdFromSSN(SSN);
+		createLoans(userId);
+	}
+	
+	public void returnBook(int objectId) {
+		String sid = Integer.toString(objectId);
+		loan.removeItemFromCurrent(sid);
+
+		objectQuery.updateLoanStatus(objectId, 0);
+	}
+
+	private void createLoans(int userId) {
 		for (Item item : loan.getAllPendingLoans().values()) {
 			int id = item.getObjectId();
-			objectQuery.insertLoan(id, user.getId());
+			objectQuery.insertLoan(id, userId);
 		}
+	}
+	
+	public void getCurrentLoans(String SSN) {
+		int userId = objectQuery.getUserIdFromSSN(SSN);
+		loan.setCurrentLoanResult(objectQuery.getCurrentLoans(userId));
 	}
 }

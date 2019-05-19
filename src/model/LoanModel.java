@@ -11,6 +11,7 @@ import Common.Item;
 public class LoanModel extends Observable{
 	private String type = "Borrower";
 	private HashMap<String, Item> pendingLoans = new HashMap<String, Item>(); 
+	private HashMap<String, Item> currentLoans = new HashMap<String, Item>(); 
 	private DefaultTableModel tableModel;
 	
 	public LoanModel() {
@@ -22,6 +23,10 @@ public class LoanModel extends Observable{
 		setChanged();
 		notifyObservers();
 	}
+	
+	public DefaultTableModel getTableModel() {
+		return tableModel;
+	}
 
 	public void addItemToPending(String id, Item item) {
 		this.pendingLoans.put(id, item);
@@ -30,14 +35,51 @@ public class LoanModel extends Observable{
 	public void removeItemFromPending(String itemId) {
 		this.pendingLoans.remove(itemId);
 	}
-	
+	// rename to getPendingItem
 	public Item getItem(String id) {
 		return pendingLoans.get(id);
 	}
-	
+
 	public HashMap<String, Item> getAllPendingLoans() {
 		return this.pendingLoans;
 	}
+
+	public void addItemToCurrent(String id, Item item) {
+		this.pendingLoans.put(id, item);
+	}
+	
+	public void removeItemFromCurrent(String itemId) {
+		this.pendingLoans.remove(itemId);
+	}
+
+	public Item getCurrentItem(String id) {
+		return currentLoans.get(id);
+	}
+	
+	public HashMap<String, Item> getAllCurrentLoans() {
+		return this.pendingLoans;
+	}
+
+	public void setCurrentLoanResult(ArrayList<Item> currentLoanResult) {
+		// clear hashmap because new result is incoming
+		this.currentLoans.clear();
+
+		for (Item item : currentLoanResult) {
+			this.currentLoans.put(item.getObjectIdInString(), item);
+		}
+	}
+
+	public void getCurrentLoansData(DefaultTableModel tableModel) {
+		// modifies the private arrayList to array
+		for (Item item : currentLoans.values()) {
+			int ID = item.getObjectId();
+			String name = item.getName();
+			int SNorAge = item.getSNorAge();
+			Object[] data = { ID, name, SNorAge };
+			tableModel.addRow(data);
+		}
+	}
+	
 	
 	public void getLoanData(DefaultTableModel tableModel) {
 		// modifies the private arrayList to array
@@ -71,15 +113,5 @@ public class LoanModel extends Observable{
 		}
 		return columnNames;
 	}
-
-	public void createDefaultTableModel() {
-		System.out.println("created table");
-		tableModel = new DefaultTableModel(getColumnNames(), 0) {
-			public boolean isCellEditable(int rowIndex, int mColIndex) {
-				return false;
-			}
-		};
-	}
-	
 
 }

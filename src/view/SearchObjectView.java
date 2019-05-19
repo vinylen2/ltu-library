@@ -201,7 +201,7 @@ public class SearchObjectView extends JPanel implements Observer{
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 		// checks if user is an admin to display add object button
-		if (user.getRole().equals("Admin")) {
+		if (user.getRole().equals("Admin") || user.getRole().equals("Librarian")) {
 			JButton btnAddObject = new JButton("Add object");
 			GridBagConstraints gbc_btnAddObject = new GridBagConstraints();
 
@@ -233,6 +233,7 @@ public class SearchObjectView extends JPanel implements Observer{
 				searchModel.getItem(id);
 				
 				loanController.addItemToPending(id, searchModel.getItem(id));
+				((DefaultTableModel)table.getModel()).removeRow(table.getSelectedRow());
 			}
 		});
 		GridBagConstraints gbc_btnAddToLoan = new GridBagConstraints();

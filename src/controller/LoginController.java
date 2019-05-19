@@ -32,6 +32,7 @@ public class LoginController{
 			ApplicationState stateEnum = ApplicationState.valueOf(newUser.role);
 			state.setApplicationState(stateEnum);
 		}
+		
 	}
 
 	public void logOut(UserModel user) {

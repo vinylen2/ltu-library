@@ -16,6 +16,7 @@ import view.BorrowerHomeView;
 import view.DynamicView;
 import view.HomeView;
 import view.LoginView;
+import view.ReturnLoanView;
 import view.SearchObjectView;
 
 public class Main{
@@ -39,6 +40,7 @@ public class Main{
 		states.put(ApplicationState.User, new BorrowerHomeView(state, user));
 		states.put(ApplicationState.AddBorrower, new AddUserView(state, user));
 		states.put(ApplicationState.AddLoan, new AddLoanView(state, user, loan));
+		states.put(ApplicationState.ReturnLoan, new ReturnLoanView(state, user, loan));
 
 		JFrame frame = new JFrame("Library system");
 		frame.setSize(500,500);

@@ -34,9 +34,9 @@ public class AdminHomeView extends JPanel implements Observer {
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{63, 117, 129, 112, 0};
-		gridBagLayout.rowHeights = new int[]{29, 0, 0, 29, 0, 0, 0};
+		gridBagLayout.rowHeights = new int[]{29, 0, 0, 29, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		this.userLabel = new JLabel(user.getName());
 		userLabel.setBounds(249, 11, 73, 16);
@@ -89,10 +89,23 @@ public class AdminHomeView extends JPanel implements Observer {
 		
 		JButton btnAddLoan = new JButton("Add loan");
 		GridBagConstraints gbc_btnAddLoan = new GridBagConstraints();
-		gbc_btnAddLoan.insets = new Insets(0, 0, 0, 5);
+		gbc_btnAddLoan.anchor = GridBagConstraints.WEST;
+		gbc_btnAddLoan.insets = new Insets(0, 0, 5, 5);
 		gbc_btnAddLoan.gridx = 1;
 		gbc_btnAddLoan.gridy = 5;
 		add(btnAddLoan, gbc_btnAddLoan);
+		
+		JButton btnNewButton = new JButton("Return loans");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				state.setApplicationState(ApplicationState.ReturnLoan);
+			}
+		});
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.insets = new Insets(0, 0, 0, 5);
+		gbc_btnNewButton.gridx = 1;
+		gbc_btnNewButton.gridy = 6;
+		add(btnNewButton, gbc_btnNewButton);
 		btnAddLoan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				state.setApplicationState(ApplicationState.AddLoan);

@@ -16,12 +16,23 @@ public class ObjectQuery {
 	// SQL for searchObject
 	//private static String getBookQuery = "SELECT * FROM Book WHERE bookName LIKE ?";
 	private static String getBookQuery = "SELECT * FROM Book b JOIN Object o on o.bookId = b.bookId WHERE b.bookName LIKE ? AND o.isLoaned = false;";
-	private static String getArticleQuery = "SELECT * FROM Article WHERE articleName LIKE ?";
-	private static String getDVDQuery = "SELECT * FROM DVD WHERE title LIKE ?";
+	private static String getArticleQuery = "SELECT * FROM Article a JOIN Object o on o.articleId = a.articleId WHERE articleName LIKE ? AND o.isLoaned = false";
+	private static String getDVDQuery = "SELECT * FROM DVD d JOIN Object o on o.dvdId = d.dvdId WHERE title LIKE ? AND o.isLoaned = false";
+	
+	// SQL for gettingCurrentLoans
+	private static String getCurrentLoans = "SELECT * FROM Loans WHERE userId = ? AND isReturned = 0";
 	
 	// SQL for insert new Object depending on type
 	private static String insertObjectQuery = "INSERT INTO Object (bookId, dvdId, articleId) VALUES (?, ?, ?) ";
 	private static String insertLoanQuery = "INSERT INTO Loans (userId, objectId, loanDate, returnDate, isReturned) VALUES (?, ?, ?, ?, ?) ";
+	
+	// SQL for updating Object isLoaned 
+	private static String updateObjectLoanStatus = "UPDATE Object SET isLoaned = ? WHERE objectId = ?";
+	
+	// SQL for getting SSN from UserId
+	private static String getUserIdFromSSNQuery = "SELECT UserId FROM User WHERE SSN = ?";
+
+	
 	
 	// Constructor to create connection to DB via Class DatabaseConnector (containing props to local DB)
 	public ObjectQuery() {
@@ -55,7 +66,6 @@ public class ObjectQuery {
 			query = "";
 			break;
 		}
-
 		// prepares a SQL-statement
 		try (PreparedStatement getObjects = connection.prepareStatement(query)){
 
@@ -65,7 +75,7 @@ public class ObjectQuery {
 			ResultSet rs = getObjects.executeQuery();
 
 			while (rs.next()) {
-				searchResult.add(new Item(rs.getInt("objectId"), rs.getString(2), rs.getInt(3), type, rs.getInt("bookId")));
+				searchResult.add(new Item(rs.getInt("objectId"), rs.getString(2), rs.getInt(3), type));
 			}
 		}
 		catch (SQLException sqlException) {
@@ -73,7 +83,6 @@ public class ObjectQuery {
 			sqlException.printStackTrace();
 		}
 		return searchResult;
-		
 	}
 	
 	// function to insert new Object from bookId/dvdId/articleId depending on type
@@ -129,7 +138,6 @@ public class ObjectQuery {
 		// 0 = failed
 		// 1 = completed
 
-
 		try (PreparedStatement insertObject = connection.prepareStatement(insertLoanQuery)){
 
 			// Sets data to prepared Statement
@@ -146,12 +154,73 @@ public class ObjectQuery {
 			int rs = insertObject.executeUpdate();
 
 			// variable to return depending on successful insertion or not
-
+			updateLoanStatus(objectId, 1);
 		}
+		
 		catch (SQLException sqlException) {
 			System.out.print(sqlException.getMessage());
 			sqlException.printStackTrace();
 		}
 	}
+	
+	public void updateLoanStatus(int objectId, int loanStatus) {
+		// loanStatus is 1 for loaned and 0 for returned
+		
+		try (PreparedStatement updateObject = connection.prepareStatement(updateObjectLoanStatus)) {
+			updateObject.setInt(1, loanStatus);
+			updateObject.setInt(2, objectId);
 
+			int rs = updateObject.executeUpdate();
+		}
+		
+		catch (SQLException sqlException) {
+			System.out.print(sqlException.getMessage());
+			sqlException.printStackTrace();
+			
+		}
+	}
+	
+	public int getUserIdFromSSN(String SSN) {
+		int userId = 0;
+		try (PreparedStatement getUserId = connection.prepareStatement(getUserIdFromSSNQuery)) {
+			// executes prepared statement
+			getUserId.setString(1, SSN);
+
+			ResultSet rs = getUserId.executeQuery();
+
+			while (rs.next()) {
+				userId = rs.getInt("UserId");
+			}
+		}
+		
+		catch (SQLException sqlException) {
+			System.out.print(sqlException.getMessage());
+			sqlException.printStackTrace();
+			
+		}
+		return userId;
+	}
+
+	public ArrayList<Item> getCurrentLoans(int userId) {
+		ArrayList<Item> currentLoanResult = new ArrayList<Item>();
+
+		// prepares a SQL-statement
+		try (PreparedStatement getObjects = connection.prepareStatement(getCurrentLoans)){
+
+			// executes prepared statement
+			getObjects.setInt(1, userId);
+
+			ResultSet rs = getObjects.executeQuery();
+
+			while (rs.next()) {
+				//currentLoanResult.add(new Item(rs.getInt("objectId"), rs.getString(2), rs.getInt(3))));
+				currentLoanResult.add(new Item(rs.getInt("objectId"), rs.getString(2), rs.getInt(3), "Book"));
+			}
+		}
+		catch (SQLException sqlException) {
+			System.out.print(sqlException.getMessage());
+			sqlException.printStackTrace();
+		}
+		return currentLoanResult;
+	}
 }

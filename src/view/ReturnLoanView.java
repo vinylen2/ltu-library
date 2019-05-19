@@ -36,9 +36,8 @@ import javax.swing.JTable;
 import java.awt.ScrollPane;
 import java.awt.GridLayout;
 
-public class AddLoanView extends JPanel implements Observer{
+public class ReturnLoanView extends JPanel implements Observer{
 	private final Action action = new SwingAction();
-	private JTable table;
 	private JScrollPane scrollPane;
 	private LoanModel loan;
 	private LoanController loanController;
@@ -50,12 +49,11 @@ public class AddLoanView extends JPanel implements Observer{
 	private ObjectController objectController = new ObjectController();
 	private JTable table_1;
 	private JTextField SSNField;
-	private boolean isSSNFieldRendered = false;
 
 	/**
 	 * Create the panel.
 	 */
-	public AddLoanView(StateModel state, UserModel user, LoanModel loan) {
+	public ReturnLoanView(StateModel state, UserModel user, LoanModel loan) {
 		this.state = state;
 		this.user = user;
 		this.loan = loan;
@@ -75,57 +73,23 @@ public class AddLoanView extends JPanel implements Observer{
 		JButton button = new JButton("<");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switch(user.getRole()) {
-				case "Admin": 
-					state.setApplicationState(ApplicationState.Admin);
-					break;
-				case "Borrower": 
-					state.setApplicationState(ApplicationState.User);
-					break;
-				default:
-					state.setApplicationState(ApplicationState.Home);
-					break;
-				}
+				state.setApplicationState(ApplicationState.Admin);
 			}
 		});
 		
-		JButton btnNewButton_1 = new JButton("Låna");
+		JButton btnNewButton_1 = new JButton("Lämna tillbaka");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				loanController.loanBooks();
-				switch (user.getRole()) {
-				case "Admin": 
-					loanController.loanBooksForUser(SSNField.getText());
-					break;
-				default:
-					loanController.loanBooks();
-					break;
-				}
-				((DefaultTableModel)table_1.getModel()).setRowCount(0);
-			}
-		});
-		
-		JButton btnNewButton_2 = new JButton("Ta bort");
-		btnNewButton_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
 				// gets object ID from selection in jtable
 				int iid = (int) table_1.getValueAt(table_1.getSelectedRow(), 0);
-				String id = Integer.toString(iid);
+				System.out.print(iid);
 
-				// deletes item from loanModel
-				loanController.removeItemFromPending(id);
+				loanController.returnBook(iid);
 
-				// deletes item from tablemodel
 				((DefaultTableModel)table_1.getModel()).removeRow(table_1.getSelectedRow());
 			}
 		});
 
-		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
-		gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_2.gridx = 1;
-		gbc_btnNewButton_2.gridy = 0;
-		add(btnNewButton_2, gbc_btnNewButton_2);
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
 		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNewButton_1.gridx = 2;
@@ -137,11 +101,15 @@ public class AddLoanView extends JPanel implements Observer{
 		gbc_button.gridy = 0;
 		add(button, gbc_button);
 
-		JButton btnNewButton = new JButton("Uppdatera vy");
+		JButton btnNewButton = new JButton("Hämta lån");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				loan.getLoanData(tableModel);
-				checkRole();
+				((DefaultTableModel)table_1.getModel()).setRowCount(0);
+
+				String SSN = SSNField.getText();
+				loanController.getCurrentLoans(SSN);
+
+				loan.getCurrentLoansData(tableModel);
 			}
 		});
 
@@ -155,29 +123,6 @@ public class AddLoanView extends JPanel implements Observer{
 		loan.getLoanData(tableModel);
 	}
 	
-	public void checkRole() {
-		if (user.getRole().equals("Admin") && !isSSNFieldRendered) {
-			JLabel lblSsn = new JLabel("SSN:");
-			GridBagConstraints gbc_lblSsn = new GridBagConstraints();
-			gbc_lblSsn.insets = new Insets(0, 0, 5, 5);
-			gbc_lblSsn.anchor = GridBagConstraints.EAST;
-			gbc_lblSsn.gridx = 2;
-			gbc_lblSsn.gridy = 1;
-			add(lblSsn, gbc_lblSsn);
-			
-			SSNField = new JTextField();
-			GridBagConstraints gbc_textField = new GridBagConstraints();
-			gbc_textField.insets = new Insets(0, 0, 5, 5);
-			gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_textField.gridx = 3;
-			gbc_textField.gridy = 1;
-			add(SSNField, gbc_textField);
-			SSNField.setColumns(10);
-			
-			isSSNFieldRendered = true;
-		}
-	}
-
 	private class SwingAction extends AbstractAction {
 		public SwingAction() {
 			putValue(NAME, "SwingAction");
@@ -191,6 +136,22 @@ public class AddLoanView extends JPanel implements Observer{
 	public void addTable(LoanModel loan) {
 		createDefaultTableModel();
 		
+		JLabel lblSsn = new JLabel("SSN:");
+		GridBagConstraints gbc_lblSsn = new GridBagConstraints();
+		gbc_lblSsn.insets = new Insets(0, 0, 5, 5);
+		gbc_lblSsn.anchor = GridBagConstraints.EAST;
+		gbc_lblSsn.gridx = 1;
+		gbc_lblSsn.gridy = 1;
+		add(lblSsn, gbc_lblSsn);
+		
+		SSNField = new JTextField();
+		GridBagConstraints gbc_textField = new GridBagConstraints();
+		gbc_textField.insets = new Insets(0, 0, 5, 5);
+		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField.gridx = 2;
+		gbc_textField.gridy = 1;
+		add(SSNField, gbc_textField);
+		SSNField.setColumns(10);
 
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -215,7 +176,6 @@ public class AddLoanView extends JPanel implements Observer{
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("ran this");
 		// TODO Auto-generated method stub
 		// checks if user is an admin to display add object button
 

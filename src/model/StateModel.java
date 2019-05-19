@@ -13,7 +13,7 @@ public class StateModel extends Observable {
 		AddBorrower,
 		AddObject, 
 		AddLoan,
-		
+		ReturnLoan,
 	}
 	
 	public ApplicationState getCurrentState() {
