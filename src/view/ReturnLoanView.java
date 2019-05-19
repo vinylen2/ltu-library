@@ -82,7 +82,6 @@ public class ReturnLoanView extends JPanel implements Observer{
 			public void actionPerformed(ActionEvent e) {
 				// gets object ID from selection in jtable
 				int iid = (int) table_1.getValueAt(table_1.getSelectedRow(), 0);
-				System.out.print(iid);
 
 				loanController.returnBook(iid);
 
@@ -106,9 +105,15 @@ public class ReturnLoanView extends JPanel implements Observer{
 			public void actionPerformed(ActionEvent e) {
 				((DefaultTableModel)table_1.getModel()).setRowCount(0);
 
-				String SSN = SSNField.getText();
-				loanController.getCurrentLoans(SSN);
-
+				switch (user.getRole()) {
+				case "Admin":
+					String SSN = SSNField.getText();
+					loanController.getCurrentLoans(SSN);
+					break;
+				default:
+					loanController.getCurrentLoansById(user.getId());	
+					break;
+				}
 				loan.getCurrentLoansData(tableModel);
 			}
 		});
@@ -128,6 +133,7 @@ public class ReturnLoanView extends JPanel implements Observer{
 			putValue(NAME, "SwingAction");
 			putValue(SHORT_DESCRIPTION, "Some short description");
 		}
+
 		public void actionPerformed(ActionEvent e) {
 		}
 	}

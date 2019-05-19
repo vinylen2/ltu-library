@@ -56,6 +56,7 @@ public class BorrowerHomeView extends JPanel implements Observer {
 		JButton btnLoans = new JButton("Loans");
 		btnLoans.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				state.setApplicationState(ApplicationState.AddLoan);
 			}
 		});
 		GridBagConstraints gbc_btnLoans = new GridBagConstraints();

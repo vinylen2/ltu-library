@@ -65,4 +65,8 @@ public class LoanController {
 		int userId = objectQuery.getUserIdFromSSN(SSN);
 		loan.setCurrentLoanResult(objectQuery.getCurrentLoans(userId));
 	}
+
+	public void getCurrentLoansById(int userId) {
+		loan.setCurrentLoanResult(objectQuery.getCurrentLoans(userId));
+	}
 }

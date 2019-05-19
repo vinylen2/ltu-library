@@ -79,7 +79,7 @@ public class AddLoanView extends JPanel implements Observer{
 				case "Admin": 
 					state.setApplicationState(ApplicationState.Admin);
 					break;
-				case "Borrower": 
+				case "User": 
 					state.setApplicationState(ApplicationState.User);
 					break;
 				default:
