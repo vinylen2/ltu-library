@@ -19,6 +19,7 @@ public class UserModel extends Observable {
 			lastname
 			);
 	}
+
 	public UserModel() {
 		user = new User();
 	}

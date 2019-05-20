@@ -30,6 +30,9 @@ public class LoanModel extends Observable{
 
 	public void addItemToPending(String id, Item item) {
 		this.pendingLoans.put(id, item);
+		setChanged();
+		notifyObservers();
+
 	}
 	
 	public void removeItemFromPending(String itemId) {

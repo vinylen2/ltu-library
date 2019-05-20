@@ -186,10 +186,10 @@ public class ReturnLoanView extends JPanel implements Observer{
 		// checks if user is an admin to display add object button
 
 
-		this.remove(scrollPane);
-		this.addTable(loan);
-		this.revalidate();
-		this.repaint();
+		//this.remove(scrollPane);
+		//this.addTable(loan);
+		//this.revalidate();
+		//this.repaint();
 		
 	}
 }

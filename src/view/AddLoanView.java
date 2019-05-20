@@ -64,6 +64,7 @@ public class AddLoanView extends JPanel implements Observer{
 		this.loanController = new LoanController(user, loan);
 
 		loan.addObserver(this);
+		user.addObserver(this);
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
@@ -137,20 +138,6 @@ public class AddLoanView extends JPanel implements Observer{
 		gbc_button.gridy = 0;
 		add(button, gbc_button);
 
-		JButton btnNewButton = new JButton("Uppdatera vy");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				loan.getLoanData(tableModel);
-				checkRole();
-			}
-		});
-
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 3;
-		gbc_btnNewButton.gridy = 0;
-		add(btnNewButton, gbc_btnNewButton);
-		
 		addTable(loan);
 		loan.getLoanData(tableModel);
 	}
@@ -215,15 +202,17 @@ public class AddLoanView extends JPanel implements Observer{
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("ran this");
 		// TODO Auto-generated method stub
 		// checks if user is an admin to display add object button
+		loan.getLoanData(tableModel);
+
+		checkRole();
 
 
-		this.remove(scrollPane);
-		this.addTable(loan);
-		this.revalidate();
-		this.repaint();
+		//this.remove(scrollPane);
+		//this.addTable(loan);
+		//this.revalidate();
+		//this.repaint();
 		
 	}
 }
