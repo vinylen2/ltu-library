@@ -9,7 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import Common.Item;
 
 public class LoanModel extends Observable{
-	private String type = "Borrower";
+	private String type = "";
 	private HashMap<String, Item> pendingLoans = new HashMap<String, Item>(); 
 	private HashMap<String, Item> currentLoans = new HashMap<String, Item>(); 
 	private DefaultTableModel tableModel;
@@ -32,7 +32,6 @@ public class LoanModel extends Observable{
 		this.pendingLoans.put(id, item);
 		setChanged();
 		notifyObservers();
-
 	}
 	
 	public void removeItemFromPending(String itemId) {
@@ -49,10 +48,12 @@ public class LoanModel extends Observable{
 
 	public void addItemToCurrent(String id, Item item) {
 		this.pendingLoans.put(id, item);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public void removeItemFromCurrent(String itemId) {
-		this.pendingLoans.remove(itemId);
+		this.currentLoans.remove(itemId);
 	}
 
 	public Item getCurrentItem(String id) {
@@ -77,12 +78,22 @@ public class LoanModel extends Observable{
 		for (Item item : currentLoans.values()) {
 			int ID = item.getObjectId();
 			String name = item.getName();
-			int SNorAge = item.getSNorAge();
-			Object[] data = { ID, name, SNorAge };
+			String type = item.getType();
+			String returnDate = item.getReturnDate();
+			Object[] data = { ID, name, type, returnDate };
 			tableModel.addRow(data);
 		}
 	}
-	
+
+	public String[] getColumnNamesForCurrent() {
+	String[] columnNames = new String[4];
+		columnNames[0] = "Id";
+		columnNames[1] = "Title";
+		columnNames[2] = "Type";
+		columnNames[3] = "Return date";
+
+		return columnNames;
+	}
 	
 	public void getLoanData(DefaultTableModel tableModel) {
 		// modifies the private arrayList to array

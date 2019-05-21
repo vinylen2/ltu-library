@@ -5,12 +5,21 @@ public class Item {
 	private String name;
 	private int SNorAge;
 	private String type;
+	private String returnDate;
 	
 	public Item(int objectId, String name, int SNorAge, String type) {
 		this.name = name;
 		this.SNorAge = SNorAge;
 		this.type = type;
 		this.objectId = objectId;
+	}
+
+	public Item(int objectId, String name, int SNorAge, String type, String returnDate) {
+		this.name = name;
+		this.SNorAge = SNorAge;
+		this.type = type;
+		this.objectId = objectId;
+		this.returnDate = returnDate;
 	}
 	
 	public String getObjectIdInString() {
@@ -31,6 +40,10 @@ public class Item {
 
 	public int getSNorAge() {
 		return this.SNorAge;
+	}
+	
+	public String getReturnDate() {
+		return this.returnDate;
 	}
 	
 	

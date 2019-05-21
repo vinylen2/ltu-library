@@ -46,12 +46,14 @@ public class LoanController {
 		int userId = objectQuery.getUserIdFromSSN(SSN);
 		createLoans(userId);
 	}
+
 	
 	public void returnBook(int objectId) {
 		String sid = Integer.toString(objectId);
 		loan.removeItemFromCurrent(sid);
 
 		objectQuery.updateLoanStatus(objectId, 0);
+		objectQuery.updateLoanStatus2(objectId);
 	}
 
 	private void createLoans(int userId) {

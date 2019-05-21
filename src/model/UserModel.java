@@ -30,7 +30,6 @@ public class UserModel extends Observable {
 	
 	public void setUser(User newUser) {
 		this.user = newUser;
-
 		setChanged();
 		// notifies DynamicView about change in state
 		notifyObservers();

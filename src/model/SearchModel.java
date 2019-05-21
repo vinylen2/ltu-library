@@ -44,13 +44,6 @@ public class SearchModel extends Observable{
 			//Object[] data = { item.getId(), item.getName(), item.getSNorAge() };
 			tableModel.addRow(data);
 		}
-
-		//for (int i = 0; i < searchItems.size(); i++) {
-		//	int ID = searchItems.get(i).getId();
-		//	String name = searchItems.get(i).getName();
-		//	int SNorAge = searchItems.get(i).getSNorAge();
-		//}
-
 	}
 	
 	public String[] getColumnNames() {

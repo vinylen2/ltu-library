@@ -49,6 +49,7 @@ public class ReturnLoanView extends JPanel implements Observer{
 	private ObjectController objectController = new ObjectController();
 	private JTable table_1;
 	private JTextField SSNField;
+	private boolean isSSNFieldRendered = false;
 
 	/**
 	 * Create the panel.
@@ -62,6 +63,7 @@ public class ReturnLoanView extends JPanel implements Observer{
 		this.loanController = new LoanController(user, loan);
 
 		loan.addObserver(this);
+		user.addObserver(this);
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
@@ -73,7 +75,17 @@ public class ReturnLoanView extends JPanel implements Observer{
 		JButton button = new JButton("<");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				state.setApplicationState(ApplicationState.Admin);
+				switch(user.getRole()) {
+				case "Admin": 
+					state.setApplicationState(ApplicationState.Admin);
+					break;
+				case "User": 
+					state.setApplicationState(ApplicationState.User);
+					break;
+				default:
+					state.setApplicationState(ApplicationState.Home);
+					break;
+				}
 			}
 		});
 		
@@ -100,32 +112,49 @@ public class ReturnLoanView extends JPanel implements Observer{
 		gbc_button.gridy = 0;
 		add(button, gbc_button);
 
-		JButton btnNewButton = new JButton("Hämta lån");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				((DefaultTableModel)table_1.getModel()).setRowCount(0);
-
-				switch (user.getRole()) {
-				case "Admin":
-					String SSN = SSNField.getText();
-					loanController.getCurrentLoans(SSN);
-					break;
-				default:
-					loanController.getCurrentLoansById(user.getId());	
-					break;
-				}
-				loan.getCurrentLoansData(tableModel);
-			}
-		});
-
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 3;
-		gbc_btnNewButton.gridy = 0;
-		add(btnNewButton, gbc_btnNewButton);
 		
 		addTable(loan);
 		loan.getLoanData(tableModel);
+	}
+
+	public void checkRole() {
+		if (user.getRole().equals("Admin") && !isSSNFieldRendered) {
+			JButton btnNewButton = new JButton("Hämta lån");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					((DefaultTableModel)table_1.getModel()).setRowCount(0);
+					String SSN = SSNField.getText();
+					loanController.getCurrentLoans(SSN);
+					loan.getCurrentLoansData(tableModel);
+				}
+			});
+
+			GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+			gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+			gbc_btnNewButton.gridx = 3;
+			gbc_btnNewButton.gridy = 0;
+			add(btnNewButton, gbc_btnNewButton);
+			
+			
+			JLabel lblSsn = new JLabel("SSN:");
+			GridBagConstraints gbc_lblSsn = new GridBagConstraints();
+			gbc_lblSsn.insets = new Insets(0, 0, 5, 5);
+			gbc_lblSsn.anchor = GridBagConstraints.EAST;
+			gbc_lblSsn.gridx = 2;
+			gbc_lblSsn.gridy = 1;
+			add(lblSsn, gbc_lblSsn);
+			
+			SSNField = new JTextField();
+			GridBagConstraints gbc_textField = new GridBagConstraints();
+			gbc_textField.insets = new Insets(0, 0, 5, 5);
+			gbc_textField.fill = GridBagConstraints.HORIZONTAL;
+			gbc_textField.gridx = 3;
+			gbc_textField.gridy = 1;
+			add(SSNField, gbc_textField);
+			SSNField.setColumns(10);
+			
+			isSSNFieldRendered = true;
+		}
 	}
 	
 	private class SwingAction extends AbstractAction {
@@ -142,24 +171,6 @@ public class ReturnLoanView extends JPanel implements Observer{
 	public void addTable(LoanModel loan) {
 		createDefaultTableModel();
 		
-		JLabel lblSsn = new JLabel("SSN:");
-		GridBagConstraints gbc_lblSsn = new GridBagConstraints();
-		gbc_lblSsn.insets = new Insets(0, 0, 5, 5);
-		gbc_lblSsn.anchor = GridBagConstraints.EAST;
-		gbc_lblSsn.gridx = 1;
-		gbc_lblSsn.gridy = 1;
-		add(lblSsn, gbc_lblSsn);
-		
-		SSNField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 2;
-		gbc_textField.gridy = 1;
-		add(SSNField, gbc_textField);
-		SSNField.setColumns(10);
-
-		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
 		gbc_scrollPane_1.gridwidth = 5;
@@ -173,7 +184,7 @@ public class ReturnLoanView extends JPanel implements Observer{
 		
 	}
 	public void createDefaultTableModel() {
-		tableModel = new DefaultTableModel(loan.getColumnNames(), 0) {
+		tableModel = new DefaultTableModel(loan.getColumnNamesForCurrent(), 0) {
 			public boolean isCellEditable(int rowIndex, int mColIndex) {
 				return false;
 			}
@@ -184,12 +195,12 @@ public class ReturnLoanView extends JPanel implements Observer{
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 		// checks if user is an admin to display add object button
-
-
-		//this.remove(scrollPane);
-		//this.addTable(loan);
-		//this.revalidate();
-		//this.repaint();
+		checkRole();
 		
+		if (user.getRole().equals("User")) {
+			System.out.println("getting stuff");
+			loanController.getCurrentLoansById(user.getId());
+			loan.getCurrentLoansData(tableModel);
+		}
 	}
 }

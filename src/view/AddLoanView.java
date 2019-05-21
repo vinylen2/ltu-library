@@ -93,7 +93,6 @@ public class AddLoanView extends JPanel implements Observer{
 		JButton btnNewButton_1 = new JButton("Låna");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				loanController.loanBooks();
 				switch (user.getRole()) {
 				case "Admin": 
 					loanController.loanBooksForUser(SSNField.getText());
@@ -160,7 +159,6 @@ public class AddLoanView extends JPanel implements Observer{
 			gbc_textField.gridy = 1;
 			add(SSNField, gbc_textField);
 			SSNField.setColumns(10);
-			
 			isSSNFieldRendered = true;
 		}
 	}
@@ -177,6 +175,7 @@ public class AddLoanView extends JPanel implements Observer{
 	
 	public void addTable(LoanModel loan) {
 		createDefaultTableModel();
+		
 		
 
 		
