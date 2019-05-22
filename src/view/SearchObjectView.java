@@ -201,27 +201,6 @@ public class SearchObjectView extends JPanel implements Observer{
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 		// checks if user is an admin to display add object button
-		if (user.getRole().equals("Admin") || user.getRole().equals("Librarian")) {
-			JButton btnAddObject = new JButton("Add object");
-			GridBagConstraints gbc_btnAddObject = new GridBagConstraints();
-
-			// listener for adding object
-			btnAddObject.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-				// gets type from selected buttongroup (same as search)
-				String type = bgroup.getSelection().getActionCommand();
-
-				// gets object ID from selection in jtable
-				int id = (int) table.getValueAt(table.getSelectedRow(), 0);
-					objectController.insertObject(id, type);
-				}
-			});
-			gbc_btnAddObject.insets = new Insets(0, 0, 5, 5);
-			gbc_btnAddObject.gridx = 2;
-			gbc_btnAddObject.gridy = 1;
-			add(btnAddObject, gbc_btnAddObject);
-		}
-		
 		if (user.isLoggedIn()) {
 		JButton btnAddToLoan = new JButton("Add to loan cart");
 		btnAddToLoan.addActionListener(new ActionListener() {

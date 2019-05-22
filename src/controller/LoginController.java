@@ -34,6 +34,10 @@ public class LoginController{
 		}
 		
 	}
+	
+	public void logOut() {
+		user.setUser(new User());
+	}
 
 	public void logOut(UserModel user) {
 		//fix this to controller

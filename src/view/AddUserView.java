@@ -3,6 +3,7 @@ package view;
 import javax.swing.JPanel;
 
 import model.StateModel;
+import model.StateModel.ApplicationState;
 import model.UserModel;
 
 import javax.swing.InputVerifier;
@@ -48,6 +49,7 @@ public class AddUserView extends JPanel {
 	private JLabel lblRoll;
 	private JComboBox comboBox;
 	private UserController userController;
+	private JButton button;
 
 	/**
 	 * Create the panel.
@@ -83,6 +85,18 @@ public class AddUserView extends JPanel {
 		gbc_textField.gridy = 1;
 		add(textField, gbc_textField);
 		textField.setColumns(10);
+		
+		button = new JButton("<");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				state.setApplicationState(ApplicationState.Admin);
+			}
+		});
+		GridBagConstraints gbc_button = new GridBagConstraints();
+		gbc_button.insets = new Insets(0, 0, 5, 0);
+		gbc_button.gridx = 2;
+		gbc_button.gridy = 1;
+		add(button, gbc_button);
 		
 		
 		lblLastName = new JLabel("Last name");

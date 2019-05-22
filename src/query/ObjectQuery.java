@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.mysql.cj.util.StringUtils;
+import com.mysql.cj.xdevapi.Statement;
+
 import Common.Item;
 import library.DatabaseConnector;
 
@@ -19,7 +22,7 @@ public class ObjectQuery {
 
 	// SQL for searchObject
 	//private static String getBookQuery = "SELECT * FROM Book WHERE bookName LIKE ?";
-	private static String getBookQuery = "SELECT * FROM Book b JOIN Object o ON o.bookId = b.bookId WHERE b.bookName LIKE ? AND o.isLoaned = false;";
+	private static String getBookQuery = "SELECT * FROM Book b JOIN Object o ON o.bookId = b.bookId WHERE bookName LIKE ? AND o.isLoaned = false;";
 	private static String getArticleQuery = "SELECT * FROM Article a JOIN Object o ON o.articleId = a.articleId WHERE articleName LIKE ? AND o.isLoaned = false";
 	private static String getDVDQuery = "SELECT * FROM DVD d JOIN Object o ON o.dvdId = d.dvdId WHERE title LIKE ? AND o.isLoaned = false";
 	
@@ -29,7 +32,12 @@ public class ObjectQuery {
 	private static String getCurrentArticleLoans = "SELECT * FROM Loans l JOIN Object o ON l.objectId = o.objectId  JOIN Article a ON o.articleId = a.articleId WHERE userId = ? AND isReturned = 0";
 	
 	// SQL for insert new Object depending on type
-	private static String insertObjectQuery = "INSERT INTO Object (bookId, dvdId, articleId) VALUES (?, ?, ?) ";
+	private static String insertBookQuery = "INSERT INTO Book (bookName, ISBN, pages) VALUES (?, ?, ?)";
+	private static String insertDVDQuery = "INSERT INTO DVD (title, length, ageLimit) VALUES (?, ?, ?)";
+	private static String insertArticleQuery = "INSERT INTO Article (articleName, ISSN, edition) VALUES (?, ?, ?)";
+	
+	private static String insertNewObject = "INSERT INTO Object (bookId, dvdId, articleId) VALUES (?, ?, ?);";
+
 	private static String insertLoanQuery = "INSERT INTO Loans (userId, objectId, loanDate, returnDate, isReturned) VALUES (?, ?, ?, ?, ?) ";
 	
 	// SQL for updating Object isLoaned 
@@ -93,19 +101,64 @@ public class ObjectQuery {
 	}
 	
 	// function to insert new Object from bookId/dvdId/articleId depending on type
-	public void insertObject(int id, String type) {
-		// variable to return if insert is completed or not 
-		// 0 = failed
-		// 1 = completed
-		int rowsAffected = 0;
-
-		// Strings for prepared statement
-		String bookId = null;
-		String dvdId = null;
-		String articleId = null;
-		
-		// set Id for insertion depending on type
+	public void insertObject(String type, String title, String ISBN, String pages) {
+		int rowsAffected;
+		String query;
 		switch (type) {
+		case "Book":
+			query = insertBookQuery;
+			break;
+		case "Article":
+			query = insertArticleQuery;
+			break;
+		case "DVD":
+			query = insertDVDQuery;
+			break;
+		default:
+			query = "";
+			break;
+		}
+
+		try (PreparedStatement insertObject = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)){
+
+			// Sets data to prepared Statement
+			insertObject.setString(1, title);
+			insertObject.setString(2, ISBN);
+			insertObject.setString(3, pages);
+			
+			// inserting data gives us following SQL
+			// INSERT INTO Object (bookId, dvdId, articleId) VALUES (bookId, dvdId, articleId);
+
+			// execute query above
+			insertObject.executeUpdate();
+			ResultSet rs = insertObject.getGeneratedKeys();
+			
+
+			java.math.BigDecimal id;
+
+			while (rs.next()) {
+				  id = rs.getBigDecimal(1);     
+
+				  // inset object in objectTable
+				  insertObjectFromNew(id.intValue(), type);
+			}
+		}
+		catch (SQLException sqlException) {
+			System.out.print(sqlException.getMessage());
+			sqlException.printStackTrace();
+		}
+
+	}
+
+	
+	public void insertObjectFromNew(int id, String type) {
+	// Strings for prepared statement
+	String bookId = null;
+	String dvdId = null;
+	String articleId = null;
+
+	// set Id for insertion depending on type
+	switch (type) {
 		case "Book":
 			bookId = Integer.toString(id);
 			break;
@@ -116,9 +169,8 @@ public class ObjectQuery {
 			dvdId = Integer.toString(id);
 			break;
 		}
-
-		try (PreparedStatement insertObject = connection.prepareStatement(insertObjectQuery)){
-
+		// variable to return depending on successful insertion or not
+		try (PreparedStatement insertObject = connection.prepareStatement(insertNewObject)){
 			// Sets data to prepared Statement
 			insertObject.setString(1, bookId);
 			insertObject.setString(2, dvdId);
@@ -128,18 +180,15 @@ public class ObjectQuery {
 			// INSERT INTO Object (bookId, dvdId, articleId) VALUES (bookId, dvdId, articleId);
 
 			// execute query above
-			int rs = insertObject.executeUpdate();
-
-			// variable to return depending on successful insertion or not
-			rowsAffected = rs;
-
+			insertObject.executeUpdate();
 		}
 		catch (SQLException sqlException) {
 			System.out.print(sqlException.getMessage());
 			sqlException.printStackTrace();
 		}
+		
 	}
-
+	
 	public void insertLoan(int objectId, int userId) {
 		// variable to return if insert is completed or not 
 		// 0 = failed

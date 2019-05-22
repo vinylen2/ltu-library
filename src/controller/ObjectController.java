@@ -11,7 +11,7 @@ public class ObjectController {
 		query = new ObjectQuery();
 	}
 	// performs insertObject function from ObjectQuery
-	public void insertObject(int id, String type) {
-		query.insertObject(id, type);
+	public void insertObject(String type, String title, String ISBN, String pages) {
+		query.insertObject(type, title, ISBN, pages);
 	}
 }

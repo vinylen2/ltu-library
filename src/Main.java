@@ -10,7 +10,7 @@ import model.LoanModel;
 import model.StateModel;
 import view.AddUserView;
 import view.AddLoanView;
-
+import view.AddObjectView;
 import view.AdminHomeView;
 import view.BorrowerHomeView;
 import view.DynamicView;
@@ -41,6 +41,7 @@ public class Main{
 		states.put(ApplicationState.AddBorrower, new AddUserView(state, user));
 		states.put(ApplicationState.AddLoan, new AddLoanView(state, user, loan));
 		states.put(ApplicationState.ReturnLoan, new ReturnLoanView(state, user, loan));
+		states.put(ApplicationState.AddObject, new AddObjectView(state, user, loan));
 
 		JFrame frame = new JFrame("Library system");
 		frame.setSize(500,500);

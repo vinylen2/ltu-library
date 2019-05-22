@@ -46,7 +46,6 @@ public class LoanController {
 		int userId = objectQuery.getUserIdFromSSN(SSN);
 		createLoans(userId);
 	}
-
 	
 	public void returnBook(int objectId) {
 		String sid = Integer.toString(objectId);

@@ -15,6 +15,10 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import com.mysql.cj.util.StringUtils;
+import com.sun.javafx.tk.Toolkit;
+import java.awt.*;
+
 import controller.LoanController;
 import controller.ObjectController;
 import controller.SearchController;
@@ -95,13 +99,17 @@ public class AddLoanView extends JPanel implements Observer{
 			public void actionPerformed(ActionEvent e) {
 				switch (user.getRole()) {
 				case "Admin": 
-					loanController.loanBooksForUser(SSNField.getText());
+					String SSNInputField = SSNField.getText();
+					if (!StringUtils.isEmptyOrWhitespaceOnly(SSNInputField)) {
+						loanController.loanBooksForUser(SSNField.getText());
+						((DefaultTableModel)table_1.getModel()).setRowCount(0);
+					}
 					break;
 				default:
 					loanController.loanBooks();
+					((DefaultTableModel)table_1.getModel()).setRowCount(0);
 					break;
 				}
-				((DefaultTableModel)table_1.getModel()).setRowCount(0);
 			}
 		});
 		
@@ -192,7 +200,7 @@ public class AddLoanView extends JPanel implements Observer{
 		
 	}
 	public void createDefaultTableModel() {
-		tableModel = new DefaultTableModel(loan.getColumnNames(), 0) {
+		tableModel = new DefaultTableModel(loan.getColumnNamesForCurrent(), 0) {
 			public boolean isCellEditable(int rowIndex, int mColIndex) {
 				return false;
 			}

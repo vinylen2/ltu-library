@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import model.StateModel;
 import model.StateModel.ApplicationState;
 import model.UserModel;
+import controller.LoginController;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -24,6 +25,7 @@ import java.awt.Insets;
 
 public class AdminHomeView extends JPanel implements Observer {
 	private JLabel userLabel;
+	private LoginController loginController;
 
 	/**
 	 * Create the panel.
@@ -31,12 +33,13 @@ public class AdminHomeView extends JPanel implements Observer {
 	public AdminHomeView(StateModel state, UserModel user) {
 		// add observable UserModel user
 		user.addObserver(this);
+		loginController = new LoginController(state, user);
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{63, 117, 129, 112, 0};
-		gridBagLayout.rowHeights = new int[]{29, 0, 0, 29, 0, 0, 0, 0};
+		gridBagLayout.rowHeights = new int[]{29, 0, 0, 29, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		this.userLabel = new JLabel(user.getName());
 		userLabel.setBounds(249, 11, 73, 16);
@@ -102,10 +105,26 @@ public class AdminHomeView extends JPanel implements Observer {
 			}
 		});
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 0, 5);
+		gbc_btnNewButton.anchor = GridBagConstraints.WEST;
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNewButton.gridx = 1;
 		gbc_btnNewButton.gridy = 6;
 		add(btnNewButton, gbc_btnNewButton);
+		
+		JButton btnLogout = new JButton("Logout");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loginController.logOut();
+				state.setApplicationState(ApplicationState.Home);
+			}
+		});
+
+		GridBagConstraints gbc_btnLogout = new GridBagConstraints();
+		gbc_btnLogout.anchor = GridBagConstraints.WEST;
+		gbc_btnLogout.insets = new Insets(0, 0, 0, 5);
+		gbc_btnLogout.gridx = 1;
+		gbc_btnLogout.gridy = 7;
+		add(btnLogout, gbc_btnLogout);
 		btnAddLoan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				state.setApplicationState(ApplicationState.AddLoan);
